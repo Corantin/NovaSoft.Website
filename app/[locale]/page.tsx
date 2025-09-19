@@ -6,6 +6,7 @@ import {Hero} from '@/components/hero';
 import {Portfolio} from '@/components/portfolio';
 import {Process} from '@/components/process';
 import {Services} from '@/components/services';
+import {getCaptchaClientConfig} from '@/lib/captcha';
 import {getHomeJsonLd} from '@/lib/schema';
 import {Locale, isLocale} from '@/lib/i18n';
 
@@ -24,6 +25,8 @@ export default async function HomePage({
 
   const contactCopy = await getTranslations({locale, namespace: 'contact'});
 
+  const captcha = getCaptchaClientConfig();
+
   return (
     <>
       <Hero locale={locale as Locale} />
@@ -41,7 +44,7 @@ export default async function HomePage({
           </h2>
         </div>
         <div className="mx-auto mt-10 max-w-4xl px-4 sm:px-6 lg:px-8">
-          <ContactForm locale={locale} />
+          <ContactForm locale={locale} captcha={captcha} />
         </div>
       </section>
       <script

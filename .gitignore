@@ -4,5 +4,6 @@ out
 *.log
 .env.local
 .env*
+!.env.example
 .playwright*
 coverage

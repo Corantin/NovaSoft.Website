@@ -3,12 +3,14 @@
 import Script from 'next/script';
 import {useTranslations} from 'next-intl';
 import {FormEvent, useEffect, useMemo, useState} from 'react';
+import type {CaptchaClientConfig} from '@/lib/captcha';
 import siteContent from '@/content/site.json';
 import {createContactSchema, MAX_MESSAGE_LENGTH} from '@/lib/validators';
 
 interface Props {
   locale: string;
   defaultService?: string;
+  captcha?: CaptchaClientConfig | null;
 }
 
 type Status = 'idle' | 'validating' | 'submitting' | 'success' | 'error';
@@ -22,16 +24,14 @@ declare global {
   }
 }
 
-export function ContactForm({locale, defaultService}: Props) {
+export function ContactForm({locale, defaultService, captcha}: Props) {
   const t = useTranslations();
   const contactT = useTranslations('contact');
   const [status, setStatus] = useState<Status>('idle');
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [captchaToken, setCaptchaToken] = useState<string | undefined>();
 
-  const hcaptchaSiteKey = process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY;
-  const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  const captchaType = turnstileSiteKey ? 'turnstile' : hcaptchaSiteKey ? 'hcaptcha' : null;
+  const captchaType = captcha?.type ?? null;
 
   useEffect(() => {
     if (captchaType === 'hcaptcha') {
@@ -226,16 +226,16 @@ export function ContactForm({locale, defaultService}: Props) {
         <label htmlFor="company-website">Company Website</label>
         <input id="company-website" name="company-website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
-      {captchaType === 'hcaptcha' && hcaptchaSiteKey ? (
+      {captchaType === 'hcaptcha' && captcha?.siteKey ? (
         <div className="flex justify-center">
           <Script src="https://js.hcaptcha.com/1/api.js" async defer />
-          <div className="h-captcha" data-sitekey={hcaptchaSiteKey} data-callback="novasoftOnHcaptcha" />
+          <div className="h-captcha" data-sitekey={captcha.siteKey} data-callback="novasoftOnHcaptcha" />
         </div>
       ) : null}
-      {captchaType === 'turnstile' && turnstileSiteKey ? (
+      {captchaType === 'turnstile' && captcha?.siteKey ? (
         <div className="flex justify-center">
           <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer />
-          <div className="cf-turnstile" data-sitekey={turnstileSiteKey} data-callback="novasoftOnTurnstile" data-theme="dark" />
+          <div className="cf-turnstile" data-sitekey={captcha.siteKey} data-callback="novasoftOnTurnstile" data-theme="dark" />
         </div>
       ) : null}
       <button

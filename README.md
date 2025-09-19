@@ -28,9 +28,11 @@ Copy `.env.example` to `.env.local` and fill in the values that apply to your de
 - `NEXT_PUBLIC_SITE_URL`: Canonical URL (required in production)
 - `NEXT_PUBLIC_DEFAULT_LOCALE`: Default language (`en` or `fr`)
 - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`: Set to enable Plausible analytics
-- `CONTACT_TO_EMAIL`: Recipient for contact emails
+- `CONTACT_TO_EMAIL`: Recipient for contact emails (falls back to `content/site.json` contact email if unset)
+- `CONTACT_FROM_EMAIL`: Optional default "from" address if different from the recipient
 - `RESEND_API_KEY` or `SMTP_*`: Configure at least one mail provider
-- `HCAPTCHA_SECRET`/`NEXT_PUBLIC_HCAPTCHA_SITE_KEY` or `TURNSTILE_SECRET`/`NEXT_PUBLIC_TURNSTILE_SITE_KEY`: Enable bot protection
+- `RESEND_FROM_EMAIL`: Verified sender when using Resend (falls back to `CONTACT_FROM_EMAIL`)
+- `HCAPTCHA_SECRET`/`NEXT_PUBLIC_HCAPTCHA_SITE_KEY` or `TURNSTILE_SECRET`/`NEXT_PUBLIC_TURNSTILE_SITE_KEY`: Enable bot protection (set both the secret and site key for a provider to activate verification)
 - `SHEET_WEBHOOK_URL`: Optional Google Sheets webhook to append new submissions
 
 ### Commands
